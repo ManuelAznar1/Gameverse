@@ -9,7 +9,6 @@ const PaginaPrincipal: React.FC = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // El filtro ahora detecta que 'g' es de tipo 'Game' y permite acceder a 'title'
   const filteredGames = gamesData.filter((g) =>
     g.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -25,9 +24,14 @@ const PaginaPrincipal: React.FC = () => {
           </>
         ) : (
           <div className="flex w-full items-center gap-4">
-            <input autoFocus type="text" placeholder="Buscar juegos..." value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white text-gray-800 p-2 rounded-lg outline-none" />
+            <input 
+                autoFocus 
+                type="text" 
+                placeholder="Buscar juegos..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-white text-gray-800 p-2 rounded-lg outline-none" 
+            />
             <button onClick={() => { setIsSearchOpen(false); setSearchQuery(""); }}>✕</button>
           </div>
         )}
@@ -38,14 +42,45 @@ const PaginaPrincipal: React.FC = () => {
       {!searchQuery && <Carousel slides={slides} />}
 
       <main className="px-6 pb-20 mt-8">
-        <h3 className="text-2xl font-bold mb-6 border-l-4 border-[#48daff] pl-4 uppercase">
-            {searchQuery ? `Resultados: "${searchQuery}"` : "Populares"}
-        </h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {filteredGames.slice(0, 8).map(game => (
-            <GameCard key={game.id} {...game} />
-          ))}
-        </div>
+        {/* SECCIÓN BUSQUEDA */}
+        {searchQuery ? (
+          <section className="animate-fade-in">
+            <h3 className="text-2xl font-bold mb-6 border-l-4 border-[#48daff] pl-4 uppercase">
+                Resultados: "{searchQuery}"
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {filteredGames.map(game => (
+                <GameCard key={game.id} {...game} />
+              ))}
+            </div>
+          </section>
+        ) : (
+          <>
+            {/* SECCIÓN POPULARES*/}
+            <section className="mb-12">
+              <h3 className="text-2xl font-bold mb-6 border-l-4 border-[#48daff] pl-4 uppercase tracking-wider">
+                  Populares
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                {gamesData.slice(0, 4).map(game => (
+                  <GameCard key={game.id} {...game} />
+                ))}
+              </div>
+            </section>
+
+            {/* SECCIÓN MÁS VENDIDOS*/}
+            <section>
+              <h3 className="text-2xl font-bold mb-6 border-l-4 border-[#48daff] pl-4 uppercase tracking-wider">
+                  Más Vendidos
+              </h3>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                {gamesData.slice(4, 8).map(game => (
+                  <GameCard key={game.id} {...game} />
+                ))}
+              </div>
+            </section>
+          </>
+        )}
       </main>
     </div>
   );
