@@ -26,7 +26,6 @@ const GameVerseLogin: React.FC = () => {
     }
 
     if (email === savedEmail && password === savedPassword) {
-      alert("Acceso concedido.");
       navigate('/home'); 
     } else {
       alert("Error: Correo o contraseña incorrectos.");
