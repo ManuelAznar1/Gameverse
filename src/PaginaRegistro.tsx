@@ -5,10 +5,7 @@ import CustomInput from './assets/componentes/Input';
 
 const GameVerseRegister: React.FC = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: '',
-    password: ''
-  });
+  const [formData, setFormData] = useState({ email: '', password: '' });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -17,70 +14,59 @@ const GameVerseRegister: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log('Datos registrados:', formData);
-    // Aquí podrías navegar al dashboard tras el registro: navigate('/dashboard');
+    const { email, password } = formData;
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+    if (!emailRegex.test(email)) {
+      alert("❌ Error: Introduce un correo válido (ejemplo@gmail.com)");
+      return;
+    }
+
+    if (password.length < 6) {
+      alert("❌ Error: La contraseña debe tener al menos 6 caracteres.");
+      return;
+    }
+
+    // GUARDAR DATOS EN EL NAVEGADOR
+    localStorage.setItem('storedEmail', email);
+    localStorage.setItem('storedPassword', password);
+
+    alert("✅ ¡Cuenta creada con éxito! Ahora puedes iniciar sesión.");
+    navigate('/login'); 
   };
 
   return (
     <div className="min-h-screen bg-[#2d2d2d] text-white font-sans flex flex-col">
-      {/* Header */}
       <header className="p-6 flex justify-between items-center">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/login')}>
-          <div className="bg-[#48daff] p-1.5 rounded-lg shadow-sm">
-            <svg className="w-6 h-6 text-[#2d2d2d]" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5S17.67 9 18.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
-            </svg>
-          </div>
-          <span className="font-bold text-xl tracking-wide">GameVerse</span>
-        </div>
-
+        <span className="font-bold text-xl tracking-wide">GameVerse</span>
         <div className="flex gap-4">
-          <CustomButton variant="solid" onClick={() => navigate('/registro')}>
-            Crear Cuenta
-          </CustomButton>
-          <CustomButton variant="solid" onClick={() => navigate('/login')}>
-            Iniciar Sesion
-          </CustomButton>
+          <CustomButton variant="solid" onClick={() => navigate('/register')}>Crear Cuenta</CustomButton>
+          <CustomButton variant="solid" onClick={() => navigate('/login')}>Iniciar Sesión</CustomButton>
         </div>
       </header>
 
-      {/* Main Container */}
       <main className="flex-grow flex flex-col items-center justify-center px-4 -mt-20">
-        <h1 className="text-4xl font-bold mb-14 tracking-tight">Crear Cuenta GameVerse</h1>
-
-        <form onSubmit={handleSubmit} className="w-full max-w-[450px] space-y-7 flex flex-col items-center">
-          
+        <h1 className="text-4xl font-bold mb-10 text-center">Crear cuenta</h1>
+        <form onSubmit={handleSubmit} className="w-full max-w-[450px] space-y-6">
           <CustomInput 
-            required
-            type="email" 
+            label="Introduce tu correo:"
             name="email"
-            placeholder="Correo Electrónico"
+            type="email"
+            placeholder="ejemplo@correo.com"
             value={formData.email}
             onChange={handleChange}
-          />
-
-          <CustomInput 
             required
-            type="password" 
+          />
+          <CustomInput 
+            label="Introduce tu contraseña:"
             name="password"
-            placeholder="Contraseña"
+            type="password"
+            placeholder="Mínimo 6 caracteres"
             value={formData.password}
             onChange={handleChange}
+            required
           />
-
-          <CustomButton type="submit" variant="outline">
-            Registrarse
-          </CustomButton>
-
-          <p className="mt-10 text-lg text-gray-200">
-            ¿Ya tienes cuenta?{' '}
-            <span 
-              className="cursor-pointer hover:underline font-medium text-white" 
-              onClick={() => navigate('/login')}
-            >
-              Inicia Sesión
-            </span>
-          </p>
+          <CustomButton type="submit" variant="outline">Registrarse</CustomButton>
         </form>
       </main>
     </div>
